@@ -700,7 +700,7 @@ function Field({
           rows={5}
           value={value}
           placeholder={placeholder}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange(e.currentTarget.value)}
           data-invalid={error ? "true" : undefined}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-error` : undefined}
@@ -714,7 +714,7 @@ function Field({
           placeholder={placeholder}
           autoComplete={autoComplete}
           dir={dirOverride}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange(e.currentTarget.value)}
           data-invalid={error ? "true" : undefined}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-error` : undefined}

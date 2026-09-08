@@ -5,7 +5,7 @@ A modern portfolio website showcasing web applications and digital products
 # ELYSIAN
 
 A single-page bilingual site — English and Arabic — for an agency in Cairo that
-builds websites and applications. React 19, Vite 7, Tailwind 4, no router and no
+builds websites and applications. Preact, Vite 7, Tailwind 4, no router and no
 backend.
 
 ```bash
@@ -22,6 +22,41 @@ npm run dev        # http://localhost:5173
 
 `build` runs the typecheck first on purpose: Vite strips types with esbuild
 without ever checking them, so without that gate a type error would ship.
+
+## Preact, written as React
+
+The components import from `react` and use React's hooks, but the site runs on
+Preact via `preact/compat`. The aliasing lives in `vite.config.ts` and the
+matching `paths` in `tsconfig.json` — no component knows or cares, and swapping
+back to React means changing those two files and nothing else.
+
+It is worth roughly 53 KB gzipped, which is most of what this page ships:
+
+| | raw | gzip |
+| --- | --- | --- |
+| React 19 | 224.8 KB | 73.1 KB |
+| Preact | 50.6 KB | 20.3 KB |
+
+Two things to know when writing new components. `@preact/preset-vite` aliases
+`react`, `react-dom`, `react-dom/test-utils` and `react/jsx-runtime` but *not*
+`react-dom/client`, which is aliased by hand in `vite.config.ts`. And event
+handlers must read `e.currentTarget.value`, not `e.target.value` — Preact types
+`target` as a plain `EventTarget`.
+
+## Smoke test
+
+There is no test framework, but there is a script that mounts the whole app in
+jsdom and drives it — language switching, form validation, the mail-app
+handoff, focus handling, the mobile menu:
+
+```bash
+npm i -D jsdom
+node scripts/smoke.mjs
+```
+
+Worth running after touching `App.tsx`, and especially after any change to the
+Preact aliasing, since compat differences surface at runtime rather than in the
+build.
 
 ## Where things live
 

@@ -7,7 +7,16 @@
     "types": ["vite/client"],
 
     "jsx": "react-jsx",
+    "jsxImportSource": "preact",
     "useDefineForClassFields": true,
+
+    /* The components import from "react"; Vite aliases that to preact/compat at
+       build time, and these two make the typechecker agree with it. */
+    "paths": {
+      "react": ["./node_modules/preact/compat/"],
+      "react-dom": ["./node_modules/preact/compat/"],
+      "react-dom/client": ["./node_modules/preact/compat/client"]
+    },
 
     /* Vite transpiles with esbuild and never emits from tsc; tsc is only ever
        run as a type checker (npm run typecheck, and as a gate before build). */
