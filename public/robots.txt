@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# One page, so there is nothing a sitemap would add. If the site ever grows
+# past a single URL, add one here.

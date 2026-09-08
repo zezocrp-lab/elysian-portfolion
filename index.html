@@ -3,8 +3,71 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="ELYSIAN — front-end developer portfolio." />
-    <title>ELYSIAN</title>
+
+    <!-- The copy here follows the hero: an agency, "we". If the site settles on
+         a solo voice instead, these three descriptions change with it. -->
+    <title>ELYSIAN — websites and applications, built in Cairo</title>
+    <meta
+      name="description"
+      content="ELYSIAN is a Cairo agency building websites, web applications, and mobile-ready tools — in Arabic, in English, or both."
+    />
+    <meta name="theme-color" content="#000000" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- The two faces the first screen paints with: the display serif and the
+         body sans, latin subset. Starting them here rather than letting the
+         stylesheet discover them saves a round trip. The Arabic faces are
+         deliberately not preloaded — most first visits are English, and the
+         Arabic page pulls its own two families instead of these. -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="/fonts/cormorant-garamond-300-normal-latin.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="/fonts/jost-300-normal-latin.woff2"
+    />
+
+    <!-- Social previews -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ELYSIAN" />
+    <meta property="og:title" content="ELYSIAN — websites and applications, built in Cairo" />
+    <meta
+      property="og:description"
+      content="A Cairo agency building websites, web applications, and mobile-ready tools — in Arabic, in English, or both."
+    />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ar_EG" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ELYSIAN — websites and applications, built in Cairo" />
+    <meta
+      name="twitter:description"
+      content="A Cairo agency building websites, web applications, and mobile-ready tools — in Arabic, in English, or both."
+    />
+
+    <meta property="og:image" content="/og.png" />
+    <meta name="twitter:image" content="/og.png" />
+
+    <!-- TODO once the domain is live. Search engines and most preview scrapers
+         require absolute URLs here, so these cannot be filled in before
+         deploying — swap YOUR-DOMAIN and uncomment. The og:image pair above
+         should become absolute at the same time. -->
+    <!--
+    <link rel="canonical" href="https://YOUR-DOMAIN/" />
+    <meta property="og:url" content="https://YOUR-DOMAIN/" />
+    <meta property="og:image" content="https://YOUR-DOMAIN/og.png" />
+    <meta name="twitter:image" content="https://YOUR-DOMAIN/og.png" />
+    <link rel="alternate" hreflang="en" href="https://YOUR-DOMAIN/" />
+    <link rel="alternate" hreflang="ar" href="https://YOUR-DOMAIN/?lang=ar" />
+    <link rel="alternate" hreflang="x-default" href="https://YOUR-DOMAIN/" />
+    -->
   </head>
   <body>
     <div id="root"></div>
