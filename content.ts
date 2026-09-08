@@ -27,6 +27,8 @@ export type Content = {
   switchTo: string;
   switchLabel: string;
   menu: string;
+  /** First stop for a keyboard or screen reader, ahead of the whole header. */
+  skipToContent: string;
   hero: {
     label: string;
     lines: string[];
@@ -60,6 +62,10 @@ export type Content = {
     sending: string;
     successTitle: string;
     successBody: string;
+    /** Shown when the message was handed to the visitor's mail app rather than sent. */
+    handoffTitle: string;
+    handoffBody: string;
+    handoffFallback: string;
     again: string;
     errors: { name: string; email: string; emailFormat: string; message: string };
   };
@@ -73,6 +79,7 @@ export const content: Record<Lang, Content> = {
     switchTo: "العربية",
     switchLabel: "Switch to Arabic",
     menu: "Menu",
+    skipToContent: "Skip to content",
     hero: {
       label: "Applications and websites",
       lines: ["Websites built", "with the same care", "as the work inside."],
@@ -183,6 +190,10 @@ export const content: Record<Lang, Content> = {
       sending: "Sending",
       successTitle: "Message sent.",
       successBody: "Thank you. I will reply to the email you left, usually within a day.",
+      handoffTitle: "Almost there.",
+      handoffBody:
+        "Your mail app should have opened with the message already written. Press send there and it reaches me.",
+      handoffFallback: "If nothing opened, write to",
       again: "Send another message",
       errors: {
         name: "Add your name so I know who I am replying to.",
@@ -200,6 +211,7 @@ export const content: Record<Lang, Content> = {
     switchTo: "English",
     switchLabel: "التبديل إلى الإنجليزية",
     menu: "القائمة",
+    skipToContent: "تخطَّ إلى المحتوى",
     hero: {
       label: "تطبيقات ومواقع",
       lines: ["مواقع مبنية", "بنفس العناية", "اللي جوّاها."],
@@ -310,6 +322,10 @@ export const content: Record<Lang, Content> = {
       sending: "جارٍ الإرسال",
       successTitle: "وصلت الرسالة.",
       successBody: "شكرًا لك. سأرد على البريد الذي تركته، خلال يوم غالبًا.",
+      handoffTitle: "بقيت خطوة.",
+      handoffBody:
+        "من المفترض أن يكون تطبيق البريد قد فُتح والرسالة مكتوبة بالفعل. اضغط إرسال هناك لتصلني.",
+      handoffFallback: "إن لم يُفتح شيء، راسلني على",
       again: "أرسل رسالة أخرى",
       errors: {
         name: "اكتب اسمك حتى أعرف من أراسل.",

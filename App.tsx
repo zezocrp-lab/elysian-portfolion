@@ -1,14 +1,21 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Mark from "./Mark";
 import { SITE, SITE_DISPLAY } from "./config";
 import { content, type Content, type Lang, type Project } from "./content";
+import { readInitialLang, rememberLang } from "./lang";
 
 const SHELL = "mx-auto w-full max-w-[1180px] px-6 md:px-10";
 
 export default function App() {
-  const [lang, setLang] = useState<Lang>("en");
+  const [lang, setLang] = useState<Lang>(readInitialLang);
   const [lifted, setLifted] = useState(false);
   const t = content[lang];
+
+  /* Only a deliberate switch is written down — see lang.ts. */
+  const chooseLang = (next: Lang) => {
+    setLang(next);
+    rememberLang(next);
+  };
 
   useEffect(() => {
     const root = document.documentElement;
@@ -25,8 +32,11 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-void text-ivory">
-      <Header lang={lang} setLang={setLang} lifted={lifted} />
-      <main>
+      <a href="#main" className="skip-link">
+        {t.skipToContent}
+      </a>
+      <Header lang={lang} onChooseLang={chooseLang} lifted={lifted} />
+      <main id="main">
         <Hero t={t} />
         <Work t={t} />
         <Practice t={t} />
@@ -42,15 +52,31 @@ export default function App() {
 
 function Header({
   lang,
-  setLang,
+  onChooseLang,
   lifted,
 }: {
   lang: Lang;
-  setLang: (l: Lang) => void;
+  onChooseLang: (l: Lang) => void;
   lifted: boolean;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
   const t = content[lang];
+
+  /* The menu sits in the flow rather than over the page, so it is a disclosure
+     and not a dialog — Escape closes it and hands focus back to its button,
+     but focus is deliberately not trapped inside it. */
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setMenuOpen(false);
+      toggleRef.current?.focus();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
+
   const items = [
     { href: "#work", label: t.nav.work },
     { href: "#practice", label: t.nav.practice },
@@ -88,7 +114,7 @@ function Header({
 
           <button
             type="button"
-            onClick={() => setLang(lang === "en" ? "ar" : "en")}
+            onClick={() => onChooseLang(lang === "en" ? "ar" : "en")}
             aria-label={t.switchLabel}
             className="rounded-full border border-gold/35 px-4 py-1.5 text-xs text-gold-light transition-colors duration-300 hover:border-gold hover:bg-gold/10"
           >
@@ -97,6 +123,7 @@ function Header({
 
           <button
             type="button"
+            ref={toggleRef}
             onClick={() => setMenuOpen(!menuOpen)}
             aria-expanded={menuOpen}
             aria-label={t.menu}
@@ -384,13 +411,37 @@ function Tools({ t }: { t: Content }) {
 type Draft = { name: string; email: string; phone: string; message: string };
 type Errors = Partial<Record<keyof Draft, string>>;
 
+/** The order fields appear in, so a failed submit focuses the first bad one. */
+const FIELD_ORDER: (keyof Draft)[] = ["name", "email", "phone", "message"];
+
 const EMPTY_DRAFT: Draft = { name: "", email: "", phone: "", message: "" };
+
+/**
+ * idle → sending → either `sent` (the endpoint accepted it) or `handoff`
+ * (we could only open the visitor's mail app — they still have to press send).
+ */
+type SendState = "idle" | "sending" | "sent" | "handoff";
 
 function Contact({ t, lang }: { t: Content; lang: Lang }) {
   const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
   const [errors, setErrors] = useState<Errors>({});
-  const [state, setState] = useState<"idle" | "sending" | "sent">("idle");
+  const [state, setState] = useState<SendState>("idle");
+  const resultRef = useRef<HTMLDivElement>(null);
+  const returningToForm = useRef(false);
   const c = t.contact;
+
+  /* Submitting swaps the whole form out for the result, which is silent to
+     anyone not watching the screen. Moving focus onto the result announces it
+     and puts a keyboard user where the page now is. Focus is used rather than
+     aria-live because it delivers reliably and cannot double-announce. */
+  useEffect(() => {
+    if (state === "sent" || state === "handoff") {
+      resultRef.current?.focus();
+    } else if (state === "idle" && returningToForm.current) {
+      returningToForm.current = false;
+      document.getElementById("name")?.focus();
+    }
+  }, [state]);
 
   const set = (key: keyof Draft) => (value: string) => {
     setDraft((prev) => ({ ...prev, [key]: value }));
@@ -411,7 +462,10 @@ function Contact({ t, lang }: { t: Content; lang: Lang }) {
     const found = validate();
     setErrors(found);
     if (Object.keys(found).length > 0) {
-      document.querySelector<HTMLElement>("[data-invalid='true']")?.focus();
+      /* Focus by id rather than querying for [data-invalid]: the attribute only
+         lands after React re-renders, which has not happened yet. */
+      const first = FIELD_ORDER.find((key) => found[key]);
+      if (first) document.getElementById(first)?.focus();
       return;
     }
 
@@ -425,22 +479,33 @@ function Contact({ t, lang }: { t: Content; lang: Lang }) {
       draft.message,
     ].join("\n");
 
+    /* Only an endpoint that answers 2xx counts as delivered. fetch resolves on
+       404s and 500s too, so a bad endpoint would otherwise report success for a
+       message nobody received. Anything else falls back to the visitor's mail
+       app, which is a handoff rather than a send. */
+    let delivered = false;
     if (SITE.formEndpoint) {
       try {
-        await fetch(SITE.formEndpoint, {
+        const response = await fetch(SITE.formEndpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
           body: JSON.stringify({ ...draft, language: lang }),
         });
+        delivered = response.ok;
       } catch {
-        window.location.href = mailtoHref(draft.name, body);
+        delivered = false;
       }
-    } else {
-      window.location.href = mailtoHref(draft.name, body);
     }
 
-    setState("sent");
-    setDraft(EMPTY_DRAFT);
+    if (delivered) {
+      setState("sent");
+      setDraft(EMPTY_DRAFT);
+      return;
+    }
+
+    /* Keep the draft: if no mail app opens, the visitor still has their text. */
+    window.location.href = mailtoHref(draft.name, body);
+    setState("handoff");
   };
 
   const rows = [
@@ -496,16 +561,33 @@ function Contact({ t, lang }: { t: Content; lang: Lang }) {
 
           {/* right column: the form card */}
           <div className="rounded-2xl border border-gold/18 bg-ink/70 p-7 backdrop-blur-sm md:p-9">
-            {state === "sent" ? (
-              <div className="detail-open py-12 text-center">
+            {state === "sent" || state === "handoff" ? (
+              <div ref={resultRef} tabIndex={-1} role="status" className="detail-open py-12 text-center">
                 <Mark gradient className="mx-auto h-12 w-auto opacity-80" />
-                <p className="display mt-6 text-[1.8rem] text-gold-light">{c.successTitle}</p>
-                <p className="mx-auto mt-3 max-w-[34ch] text-[0.93rem] leading-[1.85] text-mute">
-                  {c.successBody}
+                <p className="display mt-6 text-[1.8rem] text-gold-light">
+                  {state === "sent" ? c.successTitle : c.handoffTitle}
                 </p>
+                <p className="mx-auto mt-3 max-w-[34ch] text-[0.93rem] leading-[1.85] text-mute">
+                  {state === "sent" ? c.successBody : c.handoffBody}
+                </p>
+                {state === "handoff" && (
+                  <p className="mt-4 text-[0.93rem] text-mute">
+                    {c.handoffFallback}{" "}
+                    <a
+                      href={`mailto:${SITE.email}`}
+                      dir="ltr"
+                      className="underline-gold pb-0.5 text-gold-light"
+                    >
+                      {SITE.email}
+                    </a>
+                  </p>
+                )}
                 <button
                   type="button"
-                  onClick={() => setState("idle")}
+                  onClick={() => {
+                    returningToForm.current = true;
+                    setState("idle");
+                  }}
                   className="underline-gold mt-8 pb-1 text-sm text-gold-light"
                 >
                   {c.again}

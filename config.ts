@@ -1,15 +1,19 @@
 /* ------------------------------------------------------------------
    SITE SETTINGS — change these values and nothing else.
+
+   ⚠  EVERY VALUE BELOW IS STILL A PLACEHOLDER. The site is not ready to
+      go live until they are real: messages sent to the address below go
+      nowhere, and the WhatsApp / GitHub / LinkedIn rows link to dead ends.
    ------------------------------------------------------------------ */
 
 export const SITE = {
-  /** Where contact messages should arrive. */
+  /** Where contact messages should arrive. TODO: real address. */
   email: "hello@elysian.dev",
 
-  /** WhatsApp number, international format, digits only. Leave "" to hide the row. */
+  /** WhatsApp number, international format, digits only. Leave "" to hide the row. TODO: real number. */
   whatsapp: "201000000000",
 
-  /** Full profile URLs. Leave "" to hide the row. */
+  /** Full profile URLs. Leave "" to hide the row. TODO: real profiles. */
   github: "https://github.com/",
   linkedin: "https://www.linkedin.com/",
 
@@ -22,9 +26,41 @@ export const SITE = {
   formEndpoint: "",
 };
 
-/** Shown next to WhatsApp / GitHub rows so the visitor sees a readable value. */
+/**
+ * The readable text shown next to each contact row.
+ *
+ * Derived from the values above rather than written out by hand, so the label
+ * a visitor reads can never point somewhere different from the link they get.
+ */
 export const SITE_DISPLAY = {
-  whatsapp: "+20 100 000 0000",
-  github: "github.com/elysian",
-  linkedin: "linkedin.com/in/elysian",
+  whatsapp: formatPhone(SITE.whatsapp),
+  github: shortUrl(SITE.github),
+  linkedin: shortUrl(SITE.linkedin),
 };
+
+/** "https://www.linkedin.com/in/name/" → "linkedin.com/in/name" */
+function shortUrl(url: string) {
+  return url
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .replace(/\/+$/, "");
+}
+
+/** "201001234567" → "+20 100 123 4567" — country code, then groups from the right. */
+function formatPhone(digits: string) {
+  let rest = digits.replace(/\D/g, "");
+  if (!rest) return "";
+
+  const groups: string[] = [];
+  if (rest.length > 4) {
+    groups.unshift(rest.slice(-4));
+    rest = rest.slice(0, -4);
+  }
+  while (rest.length > 3) {
+    groups.unshift(rest.slice(-3));
+    rest = rest.slice(0, -3);
+  }
+  groups.unshift(rest);
+
+  return `+${groups.join(" ")}`;
+}
