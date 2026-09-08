@@ -3,11 +3,26 @@ export type Lang = "en" | "ar";
 /* ------------------------------------------------------------------
    HOW TO ADD A PROJECT
    --------------------------------------------------------------
-   Each project is one object in the `projects` array below — once in
-   `en`, once in `ar`, with the same `id` in both.
-   image: a screenshot URL, or "" to show the brand mark instead.
-   link:  the live site or demo, or "" to hide the button.
-   Empty the array and the section shows a tidy empty state.
+   Both `projects` arrays are empty, so the Work section shows its empty
+   state. Adding the first project is what turns the grid back on.
+
+   Each project is one object in the `projects` array below — once under
+   `en`, once under `ar`, with the same `id` in both. Copy this shape:
+
+     {
+       id: "atlas",                      // same string in both languages
+       title: "Atlas",
+       kind: "Web application",          // translated in the `ar` copy
+       year: "2026",
+       summary: "One line: what it is and who it was built for.",
+       stack: ["React", "TypeScript", "Tailwind CSS"],
+       image: "",                        // screenshot URL, or "" for the mark
+       link: "",                         // live site, or "" to hide the button
+     }
+
+   image: "" is a real option, not a placeholder — the card falls back to
+   the brand mark on an aureole, which is designed for.
+   The count beside the heading looks after itself.
    ------------------------------------------------------------------ */
 
 export type Project = {
@@ -97,48 +112,7 @@ export const content: Record<Lang, Content> = {
       visit: "Open live",
       empty: "The first projects are being prepared for this page.",
       emptyCta: "Start a project with us",
-      projects: [
-        {
-          id: "sample-1",
-          title: "Project name",
-          kind: "Website",
-          year: "2026",
-          summary: "One line about what this project is and who it was built for.",
-          stack: ["React", "TypeScript", "Tailwind CSS"],
-          image: "",
-          link: "",
-        },
-        {
-          id: "sample-2",
-          title: "Project name",
-          kind: "Web application",
-          year: "2026",
-          summary: "One line about what this project is and who it was built for.",
-          stack: ["React", "TypeScript", "Vite"],
-          image: "",
-          link: "",
-        },
-        {
-          id: "sample-3",
-          title: "Project name",
-          kind: "Landing page",
-          year: "2025",
-          summary: "One line about what this project is and who it was built for.",
-          stack: ["React", "Tailwind CSS", "Motion"],
-          image: "",
-          link: "",
-        },
-        {
-          id: "sample-4",
-          title: "Project name",
-          kind: "Dashboard",
-          year: "2025",
-          summary: "One line about what this project is and who it was built for.",
-          stack: ["React", "TypeScript", "Charts"],
-          image: "",
-          link: "",
-        },
-      ],
+      projects: [],
     },
     practice: {
       label: "Practice",
@@ -229,48 +203,7 @@ export const content: Record<Lang, Content> = {
       visit: "افتح الموقع",
       empty: "المشاريع الأولى قيد التجهيز لهذه الصفحة.",
       emptyCta: "ابدأ مشروعًا معنا",
-      projects: [
-        {
-          id: "sample-1",
-          title: "اسم المشروع",
-          kind: "موقع إلكتروني",
-          year: "٢٠٢٦",
-          summary: "سطر واحد يشرح ما هو هذا المشروع ولمن بُني.",
-          stack: ["React", "TypeScript", "Tailwind CSS"],
-          image: "",
-          link: "",
-        },
-        {
-          id: "sample-2",
-          title: "اسم المشروع",
-          kind: "تطبيق ويب",
-          year: "٢٠٢٦",
-          summary: "سطر واحد يشرح ما هو هذا المشروع ولمن بُني.",
-          stack: ["React", "TypeScript", "Vite"],
-          image: "",
-          link: "",
-        },
-        {
-          id: "sample-3",
-          title: "اسم المشروع",
-          kind: "صفحة هبوط",
-          year: "٢٠٢٥",
-          summary: "سطر واحد يشرح ما هو هذا المشروع ولمن بُني.",
-          stack: ["React", "Tailwind CSS", "Motion"],
-          image: "",
-          link: "",
-        },
-        {
-          id: "sample-4",
-          title: "اسم المشروع",
-          kind: "لوحة تحكم",
-          year: "٢٠٢٥",
-          summary: "سطر واحد يشرح ما هو هذا المشروع ولمن بُني.",
-          stack: ["React", "TypeScript", "Charts"],
-          image: "",
-          link: "",
-        },
-      ],
+      projects: [],
     },
     practice: {
       label: "الأسلوب",
