@@ -85,7 +85,7 @@ export const content: Record<Lang, Content> = {
       lines: ["Websites built", "with the same care", "as the work inside."],
       body:
         "ELYSIAN is an agency in Cairo. We build everything — websites, web applications, mobile-ready tools — in Arabic, in English, or both, from the first sketch to the last hairline of the interface.",
-      primary: "View my work",
+      primary: "View our work",
       secondary: "Get in touch",
       scroll: "Scroll",
     },
@@ -96,7 +96,7 @@ export const content: Record<Lang, Content> = {
       countLabel: (n) => (n === 1 ? "1 project" : `${n} projects`),
       visit: "Open live",
       empty: "The first projects are being prepared for this page.",
-      emptyCta: "Start a project with me",
+      emptyCta: "Start a project with us",
       projects: [
         {
           id: "sample-1",
@@ -142,17 +142,17 @@ export const content: Record<Lang, Content> = {
     },
     practice: {
       label: "Practice",
-      heading: "How I work",
+      heading: "How we work",
       items: [
         {
           title: "Understand the business before the pixels",
           body:
-            "A site is a tool, not a poster. I start with what the business does on its busiest day, then decide what the screen says first, second, and never.",
+            "A site is a tool, not a poster. We start with what the business does on its busiest day, then decide what the screen says first, second, and never.",
         },
         {
           title: "Find the cause, then make the smallest fix",
           body:
-            "A patch that hides a symptom comes back later, usually in front of a client. I trace the behaviour to its root, say plainly what was wrong, and change only what the fix requires.",
+            "A patch that hides a symptom comes back later, usually in front of a client. We trace the behaviour to its root, say plainly what was wrong, and change only what the fix requires.",
         },
         {
           title: "Arabic first, not Arabic translated",
@@ -176,28 +176,28 @@ export const content: Record<Lang, Content> = {
       headingTop: "Have a project",
       headingBottom: "in mind?",
       body:
-        "Whether the idea is fully drawn or still a rough direction, leave your email and number with a few lines about it. I read everything and reply within a day.",
+        "Whether the idea is fully drawn or still a rough direction, leave your email and number with a few lines about it. We read everything and reply within a day.",
       rows: { email: "Email", whatsapp: "WhatsApp", github: "GitHub", linkedin: "LinkedIn" },
       fields: { name: "Your name", email: "Email address", phone: "Phone number", message: "Message" },
       placeholders: {
         name: "Alex Thompson",
         email: "you@company.com",
         phone: "+20 1XX XXX XXXX",
-        message: "Tell me about your project…",
+        message: "Tell us about your project…",
       },
       optional: "optional",
       submit: "Send message",
       sending: "Sending",
       successTitle: "Message sent.",
-      successBody: "Thank you. I will reply to the email you left, usually within a day.",
+      successBody: "Thank you. We will reply to the email you left, usually within a day.",
       handoffTitle: "Almost there.",
       handoffBody:
-        "Your mail app should have opened with the message already written. Press send there and it reaches me.",
+        "Your mail app should have opened with the message already written. Press send there and it reaches us.",
       handoffFallback: "If nothing opened, write to",
       again: "Send another message",
       errors: {
-        name: "Add your name so I know who I am replying to.",
-        email: "Add an email address so I can reply.",
+        name: "Add your name so we know who we are replying to.",
+        email: "Add an email address so we can reply.",
         emailFormat: "This email address does not look complete.",
         message: "Write a line or two about what you need.",
       },
@@ -217,8 +217,8 @@ export const content: Record<Lang, Content> = {
       lines: ["مواقع مبنية", "بنفس العناية", "اللي جوّاها."],
       body:
         "إيليجيان وكالة في القاهرة. نبني كل شيء — مواقع وتطبيقات ويب وأدوات تعمل على الموبايل — بالعربية أو بالإنجليزية أو بالاثنتين، من أول رسم تخطيطي حتى آخر خط في الواجهة.",
-      primary: "شاهد أعمالي",
-      secondary: "تواصل معي",
+      primary: "شاهد أعمالنا",
+      secondary: "تواصل معنا",
       scroll: "مرّر",
     },
     work: {
@@ -228,7 +228,7 @@ export const content: Record<Lang, Content> = {
       countLabel: (n) => (n === 1 ? "مشروع واحد" : n === 2 ? "مشروعان" : `${n} مشاريع`),
       visit: "افتح الموقع",
       empty: "المشاريع الأولى قيد التجهيز لهذه الصفحة.",
-      emptyCta: "ابدأ مشروعًا معي",
+      emptyCta: "ابدأ مشروعًا معنا",
       projects: [
         {
           id: "sample-1",
@@ -274,17 +274,17 @@ export const content: Record<Lang, Content> = {
     },
     practice: {
       label: "الأسلوب",
-      heading: "طريقتي في الشغل",
+      heading: "طريقتنا في الشغل",
       items: [
         {
           title: "افهم العمل قبل البكسل",
           body:
-            "الموقع أداة لا ملصق. أبدأ بما يحدث في العمل في أكثر أيامه ازدحامًا، ثم أقرّر ما الذي تقوله الشاشة أولًا، وثانيًا، وما الذي لا تقوله أبدًا.",
+            "الموقع أداة لا ملصق. نبدأ بما يحدث في العمل في أكثر أيامه ازدحامًا، ثم نقرّر ما الذي تقوله الشاشة أولًا، وثانيًا، وما الذي لا تقوله أبدًا.",
         },
         {
           title: "ابحث عن السبب، ثم أصلح بأقل تغيير",
           body:
-            "الترقيع الذي يخفي العرض يعود لاحقًا، وغالبًا أمام العميل. أتتبع السلوك حتى جذره، وأقول بوضوح ما كان معطوبًا، وأغيّر بقدر ما يتطلبه الإصلاح فقط.",
+            "الترقيع الذي يخفي العرض يعود لاحقًا، وغالبًا أمام العميل. نتتبع السلوك حتى جذره، ونقول بوضوح ما كان معطوبًا، ونغيّر بقدر ما يتطلبه الإصلاح فقط.",
         },
         {
           title: "عربي أولًا، لا عربي مُترجم",
@@ -308,28 +308,28 @@ export const content: Record<Lang, Content> = {
       headingTop: "عندك مشروع",
       headingBottom: "في بالك؟",
       body:
-        "سواء كانت الفكرة مرسومة بالكامل أو ما زالت اتجاهًا عامًا، اترك بريدك ورقمك مع سطور قليلة عنها. أقرأ كل رسالة وأرد خلال يوم.",
+        "سواء كانت الفكرة مرسومة بالكامل أو ما زالت اتجاهًا عامًا، اترك بريدك ورقمك مع سطور قليلة عنها. نقرأ كل رسالة ونرد خلال يوم.",
       rows: { email: "البريد", whatsapp: "واتساب", github: "جيت هب", linkedin: "لينكدإن" },
       fields: { name: "اسمك", email: "البريد الإلكتروني", phone: "رقم الهاتف", message: "رسالتك" },
       placeholders: {
         name: "أحمد حسن",
         email: "you@company.com",
         phone: "٠١XX XXX XXXX",
-        message: "احكِ لي عن مشروعك…",
+        message: "احكِ لنا عن مشروعك…",
       },
       optional: "اختياري",
       submit: "أرسل الرسالة",
       sending: "جارٍ الإرسال",
       successTitle: "وصلت الرسالة.",
-      successBody: "شكرًا لك. سأرد على البريد الذي تركته، خلال يوم غالبًا.",
+      successBody: "شكرًا لك. سنرد على البريد الذي تركته، خلال يوم غالبًا.",
       handoffTitle: "بقيت خطوة.",
       handoffBody:
-        "من المفترض أن يكون تطبيق البريد قد فُتح والرسالة مكتوبة بالفعل. اضغط إرسال هناك لتصلني.",
+        "من المفترض أن يكون تطبيق البريد قد فُتح والرسالة مكتوبة بالفعل. اضغط إرسال هناك لتصلنا.",
       handoffFallback: "إن لم يُفتح شيء، راسلني على",
       again: "أرسل رسالة أخرى",
       errors: {
-        name: "اكتب اسمك حتى أعرف من أراسل.",
-        email: "اكتب بريدًا إلكترونيًا حتى أستطيع الرد.",
+        name: "اكتب اسمك حتى نعرف من نراسل.",
+        email: "اكتب بريدًا إلكترونيًا حتى نستطيع الرد.",
         emailFormat: "هذا البريد لا يبدو مكتملًا.",
         message: "اكتب سطرًا أو سطرين عمّا تحتاجه.",
       },
