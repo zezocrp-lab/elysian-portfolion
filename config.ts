@@ -7,6 +7,16 @@
    ------------------------------------------------------------------ */
 
 export const SITE = {
+  /**
+   * The deployed origin, no trailing slash — e.g. "https://elysian.dev".
+   *
+   * Fill this in once the domain is live and the build writes the tags that
+   * need an absolute URL: canonical, og:url, og:image and hreflang. Search
+   * engines ignore those when they are relative, so while this is empty the
+   * build emits only what is useful without it.
+   */
+  url: "",
+
   /** Where contact messages should arrive. TODO: real address. */
   email: "hello@elysian.dev",
 

@@ -1,15 +1,19 @@
 /**
- * Mounts the real App in jsdom and drives it: language switching, form
- * validation, the mail-app handoff, and the mobile menu. Written when the site
- * moved from React to Preact, since compat differences surface at runtime
- * rather than at build time.
+ * Mounts the real App in jsdom and drives it: language switching, history,
+ * form validation, the mail-app handoff, the mobile menu, and hydration of the
+ * prerendered Arabic page.
  *
- *   npm i -D jsdom
- *   node scripts/smoke.mjs
+ *   npm run smoke
  *
- * jsdom is deliberately not kept in package.json — nothing else needs it.
+ * Three things this site does fail at runtime rather than at build time —
+ * preact/compat aliasing, prerendering, and hydration — and a green build says
+ * nothing about any of them. Run it after touching App.tsx, lang.ts, the
+ * aliases in vite.config.ts, or scripts/prerender.mjs.
+ *
+ * The hydration section needs `npm run build` to have run first; it skips
+ * itself otherwise.
  */
-import { unlinkSync } from "node:fs";
+import { existsSync, readFileSync, unlinkSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { build } from "esbuild";
@@ -80,13 +84,25 @@ check("Arabic copy swapped in", text().includes("مواقع مبنية"));
 check("English copy gone", !text().includes("Websites built"));
 check("dir flipped to rtl", document.documentElement.dir === "rtl", `→ "${document.documentElement.dir}"`);
 check("lang is ar", document.documentElement.lang === "ar");
-check("?lang=ar written to URL", dom.window.location.search === "?lang=ar", `→ "${dom.window.location.search}"`);
-check("choice stored", localStorage.getItem("elysian:lang") === "ar");
+check("URL is /ar/", dom.window.location.pathname === "/ar/", `→ "${dom.window.location.pathname}"`);
 
 await act(async () => byLabel("التبديل إلى الإنجليزية").click());
 check("switches back to English", text().includes("Websites built"));
 check("dir back to ltr", document.documentElement.dir === "ltr");
-check("?lang=en written to URL", dom.window.location.search === "?lang=en");
+check("URL back to /", dom.window.location.pathname === "/", `→ "${dom.window.location.pathname}"`);
+
+console.log("\nback button (the switch pushes history)");
+await act(async () => {
+  dom.window.history.back();
+  await new Promise((r) => setTimeout(r, 50));
+});
+check("Back returns to Arabic", text().includes("مواقع مبنية"));
+check("URL back at /ar/", dom.window.location.pathname === "/ar/", `→ "${dom.window.location.pathname}"`);
+await act(async () => {
+  dom.window.history.forward();
+  await new Promise((r) => setTimeout(r, 50));
+});
+check("Forward returns to English", text().includes("Websites built"));
 
 console.log("\nform validation");
 await act(async () => document.querySelector("form").dispatchEvent(new dom.window.Event("submit", { bubbles: true, cancelable: true })));
@@ -122,6 +138,43 @@ check("menu opened", byLabel("Menu").getAttribute("aria-expanded") === "true");
 await act(async () => dom.window.dispatchEvent(new dom.window.KeyboardEvent("keydown", { key: "Escape", bubbles: true })));
 check("Escape closed it", byLabel("Menu").getAttribute("aria-expanded") === "false");
 check("focus returned to the toggle", document.activeElement === byLabel("Menu"));
+
+console.log("\nlanding straight on /ar/");
+{
+  dom.window.history.pushState(null, "", "/ar/");
+  const fresh = document.createElement("div");
+  document.body.appendChild(fresh);
+  await act(async () => render(h(App, {}), fresh));
+  check("Arabic from the first paint", fresh.textContent.includes("مواقع مبنية"));
+  check("no English flash in the markup", !fresh.textContent.includes("Websites built"));
+  render(null, fresh);
+  fresh.remove();
+}
+
+/* Only meaningful once `npm run build` has produced the prerendered pages. */
+const prerendered = `${ROOT}/dist/ar/index.html`;
+if (existsSync(prerendered)) {
+  console.log("\nhydrating the prerendered Arabic page");
+  const html = readFileSync(prerendered, "utf8");
+  const inner = html.slice(html.indexOf('<div id="root">') + '<div id="root">'.length, html.lastIndexOf("</div>"));
+
+  dom.window.history.pushState(null, "", "/ar/");
+  const container = document.createElement("div");
+  container.innerHTML = inner;
+  document.body.appendChild(container);
+
+  const before = container.querySelectorAll("section").length;
+  const { hydrate } = await import("preact");
+  await act(async () => hydrate(h(App, {}), container));
+
+  check("prerendered markup had sections", before > 0, `→ ${before}`);
+  check("hydration did not duplicate them", container.querySelectorAll("section").length === before, `→ ${container.querySelectorAll("section").length}`);
+  check("still Arabic after hydrating", container.textContent.includes("مواقع مبنية"));
+  check("form is interactive", !!container.querySelector("#name"));
+  container.remove();
+} else {
+  console.log("\nskipped hydration check — run `npm run build` first");
+}
 
 console.log(failures === 0 ? "\nall passed" : `\n${failures} FAILED`);
 unlinkSync(OUT);

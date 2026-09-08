@@ -42,8 +42,6 @@
       property="og:description"
       content="A Cairo agency building websites, web applications, and mobile-ready tools — in Arabic, in English, or both."
     />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:locale:alternate" content="ar_EG" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="ELYSIAN — websites and applications, built in Cairo" />
     <meta
@@ -51,22 +49,9 @@
       content="A Cairo agency building websites, web applications, and mobile-ready tools — in Arabic, in English, or both."
     />
 
-    <meta property="og:image" content="/og.png" />
-    <meta name="twitter:image" content="/og.png" />
-
-    <!-- TODO once the domain is live. Search engines and most preview scrapers
-         require absolute URLs here, so these cannot be filled in before
-         deploying — swap YOUR-DOMAIN and uncomment. The og:image pair above
-         should become absolute at the same time. -->
-    <!--
-    <link rel="canonical" href="https://YOUR-DOMAIN/" />
-    <meta property="og:url" content="https://YOUR-DOMAIN/" />
-    <meta property="og:image" content="https://YOUR-DOMAIN/og.png" />
-    <meta name="twitter:image" content="https://YOUR-DOMAIN/og.png" />
-    <link rel="alternate" hreflang="en" href="https://YOUR-DOMAIN/" />
-    <link rel="alternate" hreflang="ar" href="https://YOUR-DOMAIN/?lang=ar" />
-    <link rel="alternate" hreflang="x-default" href="https://YOUR-DOMAIN/" />
-    -->
+    <!-- og:locale, og:image, canonical, og:url and hreflang differ per language
+         and need the deployed origin, so scripts/prerender.mjs writes them into
+         each built page from SITE.url in config.ts. Nothing to edit by hand. -->
   </head>
   <body>
     <div id="root"></div>

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import Mark from "./Mark";
 import { SITE, SITE_DISPLAY } from "./config";
 import { content, type Content, type Lang, type Project } from "./content";
-import { readInitialLang, rememberLang } from "./lang";
+import { goToLang, readInitialLang } from "./lang";
 
 const SHELL = "mx-auto w-full max-w-[1180px] px-6 md:px-10";
 
@@ -11,11 +11,18 @@ export default function App() {
   const [lifted, setLifted] = useState(false);
   const t = content[lang];
 
-  /* Only a deliberate switch is written down — see lang.ts. */
+  /* Switching moves to the other language's URL — see lang.ts. */
   const chooseLang = (next: Lang) => {
     setLang(next);
-    rememberLang(next);
+    goToLang(next);
   };
+
+  /* Because the switch pushes history, Back has to switch it back. */
+  useEffect(() => {
+    const onPopState = () => setLang(readInitialLang());
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;

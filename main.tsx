@@ -1,10 +1,20 @@
 import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
-createRoot(document.getElementById("root")!).render(
+const root = document.getElementById("root")!;
+
+const tree = (
   <StrictMode>
     <App />
-  </StrictMode>,
+  </StrictMode>
 );
+
+/* Production ships prerendered markup, so adopt it rather than throwing it away
+   and painting the same thing again. The dev server serves an empty root. */
+if (root.firstChild) {
+  hydrateRoot(root, tree);
+} else {
+  createRoot(root).render(tree);
+}
