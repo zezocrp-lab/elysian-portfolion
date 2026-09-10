@@ -1,6 +1,0 @@
-User-agent: *
-Allow: /
-
-# Two pages — / and /ar/ — related to each other by hreflang, which is what
-# tells search engines they are translations rather than duplicates. A sitemap
-# would add nothing at this size; worth one if the site grows.
