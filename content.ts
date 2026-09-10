@@ -112,7 +112,19 @@ export const content: Record<Lang, Content> = {
       visit: "Open live",
       empty: "The first projects are being prepared for this page.",
       emptyCta: "Start a project with us",
-      projects: [],
+      projects: [
+        {
+          id: "khamsin-storefront",
+          title: "Khamsin",
+          kind: "Fashion storefront",
+          year: "2026",
+          summary:
+            "An editorial fashion storefront with product discovery, quick view, and a considered shopping flow.",
+          stack: ["React", "TypeScript", "Tailwind CSS", "Vite"],
+          image: "",
+          link: "",
+        },
+      ],
     },
     practice: {
       label: "Practice",
@@ -203,7 +215,19 @@ export const content: Record<Lang, Content> = {
       visit: "افتح الموقع",
       empty: "المشاريع الأولى قيد التجهيز لهذه الصفحة.",
       emptyCta: "ابدأ مشروعًا معنا",
-      projects: [],
+      projects: [
+        {
+          id: "khamsin-storefront",
+          title: "خمسين",
+          kind: "متجر أزياء",
+          year: "2026",
+          summary:
+            "متجر أزياء بطابع تحريري، فيه استكشاف للمنتجات ومعاينة سريعة وتجربة شراء هادئة ومدروسة.",
+          stack: ["React", "TypeScript", "Tailwind CSS", "Vite"],
+          image: "",
+          link: "",
+        },
+      ],
     },
     practice: {
       label: "الأسلوب",
