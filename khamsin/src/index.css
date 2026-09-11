@@ -1,0 +1,290 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600&display=swap");
+@import "tailwindcss";
+
+/* ==========================================================================
+   KHAMSIN — design tokens
+   A warm, dry, desert-leaning palette. One accent (clay). Everything else
+   is paper, ink and smoke so the garments carry the colour.
+   ========================================================================== */
+@theme {
+  --color-bone: #f5f2ec;
+  --color-paper: #fbf9f5;
+  --color-sand: #e7dfd1;
+  --color-dust: #d6cbb8;
+  --color-ink: #17140f;
+  --color-graphite: #272219;
+  --color-smoke: #6f675b;
+  --color-ash: #766d5d;
+  --color-clay: #a8613c;
+  --color-olive: #55584a;
+
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --breakpoint-3xl: 108rem;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-bone);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--color-ink);
+    color: var(--color-bone);
+  }
+
+  /* A single, consistent focus ring everywhere. */
+  :focus-visible {
+    outline: 2px solid var(--color-clay);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Firefox/Safari scrollbar tone-down for the horizontal rails. */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+
+/* Editorial micro-label: the tiny tracked caps used all over the page. */
+@utility label {
+  font-size: 0.6875rem;
+  line-height: 1;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Optical fixes for the display serif at very large sizes. */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+}
+
+@utility hairline {
+  border-color: color-mix(in oklab, var(--color-ink) 12%, transparent);
+}
+
+@utility hairline-inverse {
+  border-color: color-mix(in oklab, var(--color-bone) 18%, transparent);
+}
+
+/* Paper grain, laid over dark panels so they do not read as flat blocks. */
+@utility grain {
+  position: relative;
+  isolation: isolate;
+}
+
+/* ==========================================================================
+   Scroll reveal
+   Elements opt in with data-reveal; the observer flips data-shown.
+   --i staggers siblings. All of it collapses under reduced motion.
+   ========================================================================== */
+[data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 1.75rem, 0);
+  transition:
+    opacity 1s var(--ease-out-soft),
+    transform 1.1s var(--ease-out-soft);
+  transition-delay: calc(var(--i, 0) * 90ms);
+  will-change: opacity, transform;
+}
+
+/* Mask mode wipes its child upward. The clip lives on the CHILD on purpose:
+   IntersectionObserver measures a clipped element as zero-area, so clipping
+   the observed node itself would stop it ever revealing. */
+[data-reveal="mask"] {
+  opacity: 1;
+  transform: none;
+}
+
+[data-reveal="mask"] > * {
+  opacity: 0;
+  transform: translate3d(0, 2.5rem, 0);
+  clip-path: inset(0 0 100% 0);
+  transition:
+    opacity 0.9s var(--ease-out-soft),
+    transform 1.1s var(--ease-out-soft),
+    clip-path 1.1s var(--ease-out-soft);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+
+[data-reveal="mask"][data-shown="true"] > * {
+  opacity: 1;
+  transform: none;
+  clip-path: inset(0 0 0 0);
+}
+
+[data-reveal="fade"] {
+  transform: none;
+}
+
+[data-shown="true"] {
+  opacity: 1;
+  transform: none;
+  clip-path: inset(0 0 0 0);
+}
+
+/* Hero words rise out of their own overflow-hidden line box. */
+@keyframes khamsin-rise {
+  from {
+    transform: translate3d(0, 105%, 0) rotate(2deg);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes khamsin-fade-up {
+  from {
+    transform: translate3d(0, 1rem, 0);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes khamsin-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes khamsin-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -1.5%, 0) scale(1.03);
+  }
+}
+
+.anim-rise {
+  animation: khamsin-rise 1.15s var(--ease-out-soft) both;
+}
+
+.anim-fade-up {
+  animation: khamsin-fade-up 0.9s var(--ease-out-soft) both;
+}
+
+.anim-marquee {
+  animation: khamsin-marquee var(--marquee-duration, 44s) linear infinite;
+}
+
+.anim-drift {
+  animation: khamsin-drift 18s var(--ease-in-out-soft) infinite;
+}
+
+/* Drawer / modal choreography. */
+@keyframes khamsin-scrim {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes khamsin-slide-in {
+  from {
+    transform: translate3d(100%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes khamsin-pop-in {
+  from {
+    transform: translate3d(0, 1.5rem, 0) scale(0.985);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 1;
+  }
+}
+
+.anim-scrim {
+  animation: khamsin-scrim 0.4s var(--ease-out-soft) both;
+}
+.anim-slide-in {
+  animation: khamsin-slide-in 0.55s var(--ease-out-soft) both;
+}
+.anim-pop-in {
+  animation: khamsin-pop-in 0.5s var(--ease-out-soft) both;
+}
+
+/* Link underline that draws in from the left. */
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.45s var(--ease-out-soft);
+}
+.link-underline:hover,
+.link-underline:focus-visible,
+.link-underline[data-active="true"] {
+  background-size: 100% 1px;
+}
+
+/* ==========================================================================
+   Reduced motion — everything resolves to its end state instantly.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  [data-reveal],
+  [data-reveal="mask"] > * {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+  }
+}
